@@ -5,6 +5,7 @@ buildscript {
         coil_version = "2.2.2"
         retrofit_version = "2.9.0"
         hilt_version = "2.44"
+        coroutine_version = "1.6.4"
         lifecycle_version = "2.5.1"
         compose_destination_version = "1.7.27-beta"
     }

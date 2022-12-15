@@ -2,23 +2,25 @@ package a2a.logistic.app.presentation.components
 
 import a2a.logistic.app.R
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.Icon
+import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun A2ALogisticTextField(
     modifier: Modifier = Modifier,
     value: String,
     onValueChange: (String) -> Unit,
     label: String,
-    leadingIcon: Int
+    enable: Boolean = true,
+    leadingIcon: Int,
+    singleLine: Boolean = true,
+    keyboardOptions: KeyboardOptions = KeyboardOptions()
 ) {
     OutlinedTextField(
         value = value,
@@ -30,7 +32,11 @@ fun A2ALogisticTextField(
                 contentDescription = ""
             )
         },
-        modifier = modifier.fillMaxWidth()
+        singleLine = singleLine,
+        modifier = modifier.fillMaxWidth(),
+        enabled = enable,
+        keyboardOptions = keyboardOptions,
+
     )
 }
 
