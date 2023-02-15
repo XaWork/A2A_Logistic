@@ -6,4 +6,6 @@ object Constants {
 
     const val DELIVERY_BOY = "delivery_boy"
     const val PICKUP_BOY = "pickup_boy"
+
+    const val LAST_SCREEN = "last_screen"
 }

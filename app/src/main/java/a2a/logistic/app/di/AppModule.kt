@@ -2,6 +2,10 @@ package a2a.logistic.app.di
 
 import a2a.logistic.app.data.remote.UploadImageApi
 import a2a.logistic.app.data.remote.UserApi
+import a2a.logistic.app.domain.repository.ManageUserRepository
+import a2a.logistic.app.domain.use_case.manage_user.EmployeeStatusChangeUseCase
+import a2a.logistic.app.domain.use_case.manage_user.LogisticBoyListUseCase
+import a2a.logistic.app.domain.use_case.manage_user.ManageUserUseCase
 import a2a.logistic.app.utils.Constants.BASE_URL
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -79,5 +83,14 @@ object AppModule {
             .build()
 
         return retrofit.create()
+    }
+
+    @Provides
+    @Singleton
+    fun provideManageUserUseCase(repository: ManageUserRepository): ManageUserUseCase {
+        return ManageUserUseCase(
+            logisticBoyListUseCase = LogisticBoyListUseCase(repository),
+            employeeStatusChangeUseCase = EmployeeStatusChangeUseCase(repository)
+        )
     }
 }

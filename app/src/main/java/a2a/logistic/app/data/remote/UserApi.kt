@@ -43,6 +43,12 @@ interface UserApi {
         @Field("master") master: String,
         @Field("user_type") userType: String
     ): UsersListResponse
+
+    @FormUrlEncoded
+    @POST("employee-status-chnage")
+    suspend fun employeeStatusChange(
+        @Field("id") id: String
+    ): ChangeUserStatusResponse
 }
 
 interface UploadImageApi {

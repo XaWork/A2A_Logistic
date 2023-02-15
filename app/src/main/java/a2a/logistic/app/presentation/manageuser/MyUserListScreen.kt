@@ -19,6 +19,9 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import okhttp3.internal.userAgent
+
+//TODO : 1 send user id in status change
 
 @Composable
 fun MyUserListScreen(
@@ -28,6 +31,12 @@ fun MyUserListScreen(
 ) {
     val state = viewModel.state
     viewModel.onEvent(ManageUserEvents.LogisticBoyList)
+
+    val lastScreen = viewModel.lastScreen
+
+    var userStatus by remember {
+        mutableStateOf(false)
+    }
 
     Scaffold(
         topBar = {
@@ -48,30 +57,56 @@ fun MyUserListScreen(
                 Toast.makeText(LocalContext.current, state.value.error, Toast.LENGTH_SHORT).show()
                 onBackPress()
             } else if (state.value.usersListResponse != null)
-                UserList(onItemClick = onNavigateToUserDetailsScreen)
+                UserList(
+                    onItemClick = onNavigateToUserDetailsScreen,
+                    onUserStatusChange = {
+                        userStatus = !userStatus
+                        viewModel.onEvent(ManageUserEvents.EmployeeStatusChange(""))
+                    },
+                    useStatus = userStatus
+                )
+            else if (state.value.employeeStatusChange != null)
+                Toast.makeText(
+                    LocalContext.current,
+                    state.value.employeeStatusChange!!.message,
+                    Toast.LENGTH_SHORT
+                ).show()
             else
-                UserList(onItemClick = onNavigateToUserDetailsScreen)
+                UserList(
+                    onItemClick = onNavigateToUserDetailsScreen,
+                    onUserStatusChange = {
+                        userStatus = !userStatus
+                        viewModel.onEvent(ManageUserEvents.EmployeeStatusChange(""))
+                    },
+                    useStatus = userStatus
+                )
         }
     )
 }
 
 @Composable
-fun UserList(onItemClick: () -> Unit) {
+fun UserList(
+    onItemClick: () -> Unit,
+    onUserStatusChange: () -> Unit,
+    useStatus: Boolean,
+) {
     LazyColumn(modifier = Modifier.padding(ScreenPadding)) {
         items(10) {
-            SingleUserItem(onItemClick = onItemClick)
+            SingleUserItem(
+                onItemClick = onItemClick,
+                onUserStatusChange = onUserStatusChange,
+                userStatus = useStatus
+            )
         }
     }
 }
 
 @Composable
 fun SingleUserItem(
-    onItemClick: () -> Unit
+    userStatus: Boolean,
+    onItemClick: () -> Unit,
+    onUserStatusChange: () -> Unit
 ) {
-    var userStatus by remember {
-        mutableStateOf(false)
-    }
-
     Card(
         modifier = Modifier
             .padding(vertical = SpaceBetweenViewsAndSubViews)
@@ -125,7 +160,7 @@ fun SingleUserItem(
 
             Switch(
                 checked = userStatus,
-                onCheckedChange = { userStatus = it },
+                onCheckedChange = { onUserStatusChange() },
                 modifier = Modifier
                     .weight(1f)
                     .align(Alignment.CenterVertically)
